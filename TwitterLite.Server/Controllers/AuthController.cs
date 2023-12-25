@@ -33,7 +33,7 @@ namespace TwitterLite.Server.Controllers
 
             User userCreated = userRepository.Create(user);
 
-            return Ok(new { message = "User created", userCreated });
+            return Ok(new { userCreated });
         }
 
         [HttpPost("login")]
