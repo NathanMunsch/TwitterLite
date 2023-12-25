@@ -9,7 +9,7 @@ namespace TwitterLite.Server.Dtos
         public string Username { get; set; }
 
         [Required]
-        [StringLength(500, MinimumLength = 12)]
+        [MaxLength(500)]
         public string Password { get; set; }
     }
 }
