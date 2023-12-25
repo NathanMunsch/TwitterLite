@@ -42,7 +42,7 @@ namespace TwitterLite.Server.Controllers
             var user = userRepository.GetByUsername(loginDto.Username);
             if (user == null) return BadRequest(new { message = "Invalid credentials" });
 
-            if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password)) return BadRequest(new { message = "Invalid credentials" });
+            if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password)) return Unauthorized(new { message = "Invalid credentials" });
 
             var jwtToken = jwtService.Generate(user.Id);
             Response.Cookies.Append("jwtToken", jwtToken, new CookieOptions
@@ -56,23 +56,12 @@ namespace TwitterLite.Server.Controllers
         [HttpGet("getAuthenticatedUser")]
         public IActionResult GetAuthenticatedUser()
         {
-            try
-            {
-                var jwtToken = Request.Cookies["jwtToken"];
-                if (jwtToken == null) return BadRequest();
+            var jwtToken = Request.Cookies["jwtToken"];
 
-                if (jwtService.IsTokenExpired(jwtToken)) return Unauthorized();
+            var userId = jwtService.GetUserIdFromToken(jwtToken);
+            var user = userRepository.GetById(userId);
 
-                var userId = jwtService.GetUserIdFromToken(jwtToken);
-                var user = userRepository.GetById(userId);
-                if (user == null) return BadRequest();
-
-                return Ok(new { user });
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+            return Ok(new { user });
         }
 
         [HttpPost("logout")]

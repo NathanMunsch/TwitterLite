@@ -39,12 +39,20 @@ namespace TwitterLite.Server.Helpers
 
         public bool IsTokenExpired(string jwtToken)
         {
-            return (!(DateTime.Now < GetJwtSecurityToken(jwtToken).ValidTo.ToLocalTime()));
+            try
+            { 
+                return !(DateTime.Now < GetJwtSecurityToken(jwtToken).ValidTo.ToLocalTime());
+            }
+            catch { return false; }
         }
 
         public int GetUserIdFromToken(string jwtToken)
         {
-            return int.Parse(GetJwtSecurityToken(jwtToken).Issuer);
+            try
+            {
+                return int.Parse(GetJwtSecurityToken(jwtToken).Issuer);
+            }
+            catch { return 0; }
         }
     }
 }
