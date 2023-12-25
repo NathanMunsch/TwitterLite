@@ -6,7 +6,7 @@ namespace TwitterLite.Server.Helpers
 {
     public class JwtService
     {
-        private string secureKey = "tjis is a very secured key hjkdsqfqs ffqsdgb qklfgj";
+        private string secureKey = "443754be9d8174437544690cd73e1f7f5384411fc01047f53849";
 
         public string Generate(int id)
         {
@@ -20,7 +20,7 @@ namespace TwitterLite.Server.Helpers
             return new JwtSecurityTokenHandler().WriteToken(securityToken);
         }
 
-        private JwtSecurityToken GetJwtSecurityToken(string jwtToken)
+        public JwtSecurityToken IsValid(string jwtToken)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(secureKey);
@@ -34,25 +34,7 @@ namespace TwitterLite.Server.Helpers
                 ValidateLifetime = true,
             }, out SecurityToken validatedToken);
 
-            return (JwtSecurityToken)validatedToken;
-        }
-
-        public bool IsTokenExpired(string jwtToken)
-        {
-            try
-            { 
-                return !(DateTime.Now < GetJwtSecurityToken(jwtToken).ValidTo.ToLocalTime());
-            }
-            catch { return false; }
-        }
-
-        public int GetUserIdFromToken(string jwtToken)
-        {
-            try
-            {
-                return int.Parse(GetJwtSecurityToken(jwtToken).Issuer);
-            }
-            catch { return 0; }
+            return (JwtSecurityToken) validatedToken;
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Azure.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 using TwitterLite.Server.Data;
 using TwitterLite.Server.Helpers;
+using TwitterLite.Server.Models;
 
 namespace TwitterLite.Server.Middlewares
 {
@@ -19,27 +21,26 @@ namespace TwitterLite.Server.Middlewares
 
         public async Task Invoke(HttpContext httpContext, JwtService jwtService, UserRepository userRepository)
         {
-            // Check if JWT token cookie exists
+            JwtSecurityToken jwtSecurityToken;
             var jwtToken = httpContext.Request.Cookies["jwtToken"];
-            if (jwtToken == null)
+            int userId;
+
+            try
+            {
+                jwtSecurityToken = jwtService.IsValid(jwtToken);
+                userId = int.Parse(jwtSecurityToken.Issuer);
+            }
+            catch
             {
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-                return;
-            }
-
-            // Check if the JWT token is expired
-            if (jwtService.IsTokenExpired(jwtToken))
-            {
-                httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return;
             }
 
             // Check if the user in the JWT token exists
-            var userId = jwtService.GetUserIdFromToken(jwtToken);
-            var user = userRepository.GetById(userId);
+            User user = userRepository.GetById(userId);
             if (user == null)
             {
-                httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return;
             }
 
