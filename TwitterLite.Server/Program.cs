@@ -10,7 +10,7 @@ builder.Services.AddCors();
 builder.Services.AddDbContext<UserContext>(options =>
 {
     // Configure the UserContext to use SQL Server
-    options.UseSqlServer("Server=192.168.1.112;Initial Catalog=TwitterLite;User ID=nathan;Password=nathan;TrustServerCertificate=True;");
+    options.UseSqlServer("Server=192.168.1.112;Initial Catalog=TwitterLite;User ID=TwitterLite;Password=jaq?#bfQP65!;TrustServerCertificate=True;");
 });
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<JwtService>();
