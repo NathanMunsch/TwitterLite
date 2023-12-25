@@ -28,7 +28,6 @@ namespace TwitterLite.Server.Controllers
                 Password = BCrypt.Net.BCrypt.HashPassword(registerDto.Password),
             };
 
-            if (user.Username.Length < 3) return BadRequest(new { message = "Username must contains at least 3 characters" });
             if (userRepository.GetByUsername(user.Username) != null) return BadRequest(new { message = "Username already exists" });
 
             var userCreated = userRepository.Create(user);
@@ -42,7 +41,7 @@ namespace TwitterLite.Server.Controllers
             var user = userRepository.GetByUsername(loginDto.Username);
             if (user == null) return BadRequest(new { message = "Invalid credentials" });
 
-            if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password)) return Unauthorized(new { message = "Invalid credentials" });
+            if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password)) return Unauthorized();
 
             var jwtToken = jwtService.Generate(user.Id);
             Response.Cookies.Append("jwtToken", jwtToken, new CookieOptions
@@ -50,7 +49,7 @@ namespace TwitterLite.Server.Controllers
                 HttpOnly = true
             });
 
-            return Ok(new { message = "Authentication successful" });
+            return Ok();
         }
 
         [HttpGet("getAuthenticatedUser")]
@@ -69,7 +68,7 @@ namespace TwitterLite.Server.Controllers
         {
             Response.Cookies.Delete("jwtToken");
 
-            return Ok(new { message = "Logged out" });
+            return Ok();
         }
     }
 }
