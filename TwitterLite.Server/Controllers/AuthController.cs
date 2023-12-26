@@ -53,8 +53,8 @@ namespace TwitterLite.Server.Controllers
             return Ok();
         }
 
-        [HttpGet("getAuthenticatedUser")]
-        public IActionResult GetAuthenticatedUser()
+        [HttpGet("user")]
+        public IActionResult User()
         {
             var jwtToken = Request.Cookies["jwtToken"];
 
