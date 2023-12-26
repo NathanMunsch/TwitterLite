@@ -37,7 +37,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Use a MapWhen branch to conditionally apply middleware based on the request path
-app.MapWhen(context => !context.Request.Path.StartsWithSegments("/auth/register") && !context.Request.Path.StartsWithSegments("/auth/login") && !context.Request.Path.StartsWithSegments("/auth/logout"), branch =>
+app.MapWhen(context => !context.Request.Path.StartsWithSegments("/auth/register") && !context.Request.Path.StartsWithSegments("/auth/login"), branch =>
 {
     branch.UseMiddleware<AuthMiddleware>();
 
