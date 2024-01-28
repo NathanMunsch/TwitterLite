@@ -10,7 +10,7 @@ builder.Services.AddCors();
 builder.Services.AddDbContext<UserContext>(options =>
 {
     // Configure the UserContext to use SQL Server
-    options.UseSqlServer("Server=192.168.1.112;Initial Catalog=TwitterLite;User ID=TwitterLite;Password=jaq?#bfQP65!;TrustServerCertificate=True;");
+    options.UseSqlServer("Server=88.123.181.135,16300;Initial Catalog=TwitterLite;User ID=TwitterLite;Password=jaq?#bfQP65!;TrustServerCertificate=True;");
 });
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<JwtService>();
@@ -21,7 +21,7 @@ var app = builder.Build();
 
 // Configure Cross-Origin Resource Sharing (CORS)
 app.UseCors(options => options
-    .WithOrigins(new[] { "https://localhost:5173/" })
+    .WithOrigins(new[] { "https://localhost:5173" })
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()
