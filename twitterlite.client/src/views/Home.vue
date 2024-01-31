@@ -1,6 +1,7 @@
 <script setup>
     import { computed } from "vue";
     import { useStore } from "vuex";
+    import TweetDialog  from "../components/TweetDialog.vue";
 
     const store = useStore()
     const auth = computed(() => store.state.authenticated)
@@ -23,6 +24,7 @@
     <router-link v-if="!auth" to="/register">register</router-link>
     <br />
     <button v-if="auth" @click="logout">Logout</button>
+    <TweetDialog></TweetDialog>
 </template>
 
 <style scoped>
