@@ -1,9 +1,7 @@
 <script setup>
-    import { computed } from "vue";
-    import { useStore } from "vuex";
+    import { useRouter } from 'vue-router';
 
-    const store = useStore()
-    const auth = computed(() => store.state.authenticated)
+    const router = useRouter();
 
     function logout() {
         fetch('https://localhost:7078/auth/logout', {
@@ -11,18 +9,18 @@
             credentials: 'include'
         }).then(response => {
             if (response.ok) {
-                store.dispatch('setAuth', false)
+                router.push('/login')
             }
         })
     }
 </script>
 
 <template>
-    <router-link v-if="!auth" to="/login">login</router-link>
+    <router-link to="/login">login</router-link>
     <br />
-    <router-link v-if="!auth" to="/register">register</router-link>
+    <router-link to="/register">register</router-link>
     <br />
-    <button v-if="auth" @click="logout">Logout</button>
+    <button @click="logout">Logout</button>
 </template>
 
 <style scoped>

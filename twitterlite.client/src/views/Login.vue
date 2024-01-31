@@ -1,7 +1,6 @@
 <script setup>
     import { reactive } from 'vue';
     import { useRouter } from 'vue-router';
-    import { useStore } from 'vuex';
 
     const data = reactive({
         username: '',
@@ -9,7 +8,6 @@
     });
 
     const router = useRouter();
-    const store = useStore();
 
     const submit = async () => {
         await fetch('https://localhost:7078/auth/login', {
@@ -19,7 +17,6 @@
             body: JSON.stringify(data)
         }).then(response => {
             if (response.ok) {
-                store.dispatch('setAuth', true)
                 router.push('/')
             } else {
                 alert("Invalid credentials")

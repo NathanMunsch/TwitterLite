@@ -1,14 +1,27 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import { createRouter, createWebHistory } from 'vue-router';
-import store from './store/index.js';
 
 import Home from './views/Home.vue';
 import Login from './views/Login.vue';
 import Register from './views/Register.vue';
 
+
+const authMiddleware = (to, from, next) => {
+    fetch('https://localhost:7078/auth/user', {
+        method: 'GET',
+        credentials: 'include'
+    }).then(response => {
+        if (response.ok) {
+            return next();
+        } else {
+            router.push('/login');
+        }
+    });
+};
+
 const routes = [
-    { path: '/', component: Home },
+    { path: '/', component: Home, meta: { middleware: authMiddleware } },
     { path: '/login', component: Login },
     { path: '/register', component: Register }
 ];
@@ -18,10 +31,16 @@ const router = createRouter({
     routes
 });
 
+router.beforeEach((to, from, next) => {
+    if (to.meta.middleware) {
+        to.meta.middleware(to, from, next);
+    } else {
+        next();
+    }
+});
+
 const app = createApp(App);
 
 app.use(router);
-
-app.use(store);
 
 app.mount('#app');
