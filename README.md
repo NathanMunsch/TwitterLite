@@ -10,6 +10,14 @@ L'objectif principal de TwitterLite est de fournir une plateforme conviviale et 
 
 ## Fonctionnalités
 
+### Pages du site
+- Page principale (Voir les tweets, tweeter)
+- Page de connexion / de création de compte
+- Page de modification du compte
+
+### Accès aux pages
+- Seul les utilisateurs authentifiés auront accès aux fonctionnalités du site.
+
 ### Envoyer un tweet
 - Les utilisateurs doivent pouvoir composer et envoyer des tweets.
 - La longueur maximale d'un tweet sera de 450 caractères.
