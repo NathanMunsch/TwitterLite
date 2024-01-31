@@ -7,17 +7,6 @@ import Home from './views/Home.vue';
 import Login from './views/Login.vue';
 import Register from './views/Register.vue';
 
-import 'vuetify/styles'
-import { createVuetify } from 'vuetify'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
-
-const vuetify = createVuetify({
-    components,
-    directives,
-})
-
-
 const routes = [
     { path: '/', component: Home },
     { path: '/login', component: Login },
@@ -34,7 +23,5 @@ const app = createApp(App);
 app.use(router);
 
 app.use(store);
-
-app.use(vuetify);
 
 app.mount('#app');
