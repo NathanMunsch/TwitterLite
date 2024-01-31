@@ -1,5 +1,6 @@
 <script setup>
     import { useRouter } from 'vue-router';
+    import TweetDialog  from "../components/TweetDialog.vue";
 
     const router = useRouter();
 
@@ -21,6 +22,7 @@
     <router-link to="/register">register</router-link>
     <br />
     <button @click="logout">Logout</button>
+    <TweetDialog></TweetDialog>
 </template>
 
 <style scoped>
