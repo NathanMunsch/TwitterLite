@@ -50,7 +50,7 @@
 
     const submit = handleSubmit(values => {
         showSnackbar.value = false;
-        fetch('https:localhost:7078/auth/login', {
+        fetch('https://localhost:7078/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
