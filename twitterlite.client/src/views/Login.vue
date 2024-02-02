@@ -46,10 +46,10 @@
     const username = useField('username')
     const password = useField('password')
     const router = useRouter();
-    const showSnackbar = ref(false);
+    const showFlashMessage = ref(false);
 
     const submit = handleSubmit(values => {
-        showSnackbar.value = false;
+        showFlashMessage.value = false;
         fetch('https://localhost:7078/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -62,14 +62,14 @@
             if (response.ok) {
                 router.push('/')
             } else {
-                showSnackbar.value = true;
+                showFlashMessage.value = true;
             }
         });
     })
 </script>
 
 <template>
-    <FlashMessage v-if="showSnackbar" content='Login failed'></FlashMessage>
+    <FlashMessage v-if="showFlashMessage" content='Login failed'></FlashMessage>
     <div>
         <div class="mainLogo">
             <img src="/src/images/logo.png" alt="LogoTwitterLite" />
