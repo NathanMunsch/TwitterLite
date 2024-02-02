@@ -1,229 +1,125 @@
 <script setup>
-    import { reactive } from 'vue';
+    import { useField, useForm } from 'vee-validate'
     import { useRouter } from 'vue-router';
+    import { ref } from 'vue';
+    import FlashMessage from "../components/FlashMessage.vue";
 
-    const data = reactive({
-        username: '',
-        password: ''
-    });
+    const { handleSubmit } = useForm({
+        validationSchema: {
+            username(value) {
+                if (value?.length == null || value?.length < 3 || value?.length > 32) {
+                    return 'Must be between 3 and 32 characters in length.';
+                }
 
+                if (!/^[a-zA-Z0-9]+$/.test(value)) {
+                    return 'Must contain only alphanumeric characters.';
+                }
+
+                return true;
+            },
+            password(value) {
+                if (!/.{12,32}/.test(value)) {
+                    return 'Must be between 12 and 32 characters in length.';
+                }
+
+                if (!/(?=.*[a-z])/.test(value)) {
+                    return 'Must contain at least one lowercase letter.';
+                }
+
+                if (!/(?=.*[A-Z])/.test(value)) {
+                    return 'Must contain at least one uppercase letter.';
+                }
+
+                if (!/(?=.*[0-9])/.test(value)) {
+                    return 'Must contain at least one digit.';
+                }
+
+                if (!/[*.!@$%^&(){}[\]:;<>,.?/~_+\-=|\\]/.test(value)) {
+                    return 'Must contain at least one special character among *.!@$%^&(){}[]:;<>,.?/~_+-=|\.';
+                }
+
+                return true;
+            },
+        },
+    })
+
+    const username = useField('username')
+    const password = useField('password')
     const router = useRouter();
+    const showSnackbar = ref(false);
 
-    const submit = async () => {
-        await fetch('https://localhost:7078/auth/login', {
+    const submit = handleSubmit(values => {
+        showSnackbar.value = false;
+        fetch('https:localhost:7078/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify(data)
+            body: JSON.stringify({
+                'username': values.username,
+                'password': values.password
+            })
         }).then(response => {
             if (response.ok) {
                 router.push('/')
             } else {
-                alert("Invalid credentials")
+                showSnackbar.value = true;
             }
         });
-    }
+    })
 </script>
 
 <template>
-    <form @submit.prevent="submit">
-        <div class='container'>
-            <div class='div-1'>
-                <div class='sub-div-1'>
-                    <i class="fa fa-twitter icon"></i>
-                </div>
-            </div>
-            <div class='div-2'>
-                <div class='sub-div-2'>
-                    <h3>Log in to TwitterLite</h3>
-                </div>
-            </div>
-            <div class='div-3'>
-                <div class='sub-div-3'>
-                    <label>Username</label><br>
-                    <input v-model="data.username" type='text'>
-                </div>
-            </div>
-            <div class='div-4'>
-                <div class='sub-div-4'>
-                    <label>Password</label><br>
-                    <input v-model="data.password" type='password'>
-                </div>
-            </div>
-            <div class='div-5'>
-                <div class='sub-div-5'>
-                    <button type="submit">Log in</button>
-                </div>
-            </div>
-            <div class='div-6'>
-                <div class='sub-div-6'>
-                    <router-link to="/register">Sign up for TwitterLite</router-link>
-                </div>
-            </div>
+    <FlashMessage v-if="showSnackbar" content='Login failed'></FlashMessage>
+    <div>
+        <div class="mainLogo">
+            <img src="/src/images/logo.png" alt="LogoTwitterLite" />
         </div>
-    </form>
+
+        <form @submit.prevent="submit" id="loginForm">
+            <v-text-field v-model="username.value.value" :error-messages="username.errorMessage.value" label="Username"></v-text-field>
+
+            <v-text-field v-model="password.value.value" type="password" :error-messages="password.errorMessage.value" label="Password"></v-text-field>
+
+            <v-btn class="me-4" type="submit">
+                Login
+            </v-btn>
+        </form>
+
+        <div id="createAccount">
+            <p>Don't have an account ? </p>
+            <router-link to="/register">Register</router-link>
+        </div>
+
+    </div>
 </template>
 
-<style scoped>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    .container {
-        height: 100vh;
-    }
-
-    .div-1 {
-        display: flex;
-    }
-
-        .div-1 > .sub-div-1 {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-        }
-
-    .sub-div-1 > .icon {
-        font-size: 35px;
-        color: #1194FF;
-        margin: 20px 0 30px 0;
-    }
-
-    .div-2 {
-        display: flex;
-    }
-
-        .div-2 > .sub-div-2 {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-        }
-
-            .div-2 > .sub-div-2 > h3 {
-                font-family: Verdana;
-            }
-
-    .div-3 {
+<style>
+    .mainLogo {
         display: flex;
         justify-content: center;
+        margin: 5%;
     }
 
-        .div-3 > .sub-div-3 {
-            background: #F8f8f8;
-            margin: 20px 0 0 0;
-            width: 55%;
-            height: 50px;
-            position: relative;
-            border-bottom: 1.5px solid #555;
+    #loginForm {
+        margin: auto;
+        width: 50%;
+    }
+
+        #loginForm button {
+            width: 100%;
+            background-color: #3780FF;
+            font-weight: bold;
+            margin-bottom: 10px
         }
 
-    .sub-div-3 > label {
-        margin-left: 7px;
-        font-size: 14px;
-        font-family: helvetica;
-        color: #787878;
-    }
-
-    .sub-div-3 > input {
-        all: unset;
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        height: 30px;
-        padding: 9px 0 0 7px;
-    }
-
-    .div-4 {
+    #createAccount {
         display: flex;
         justify-content: center;
+        flex-direction: row;
     }
 
-        .div-4 > .sub-div-4 {
-            background: #f8f8f8;
-            margin: 20px 0 0 0;
-            width: 55%;
-            height: 50px;
-            position: relative;
-            border-bottom: 1.5px solid #555;
+        #createAccount p {
+            margin-right: 5px;
+            font-weight: bold;
         }
-
-    .sub-div-4 > label {
-        margin-left: 7px;
-        font-size: 14px;
-        font-family: helvetica;
-        color: #787878;
-    }
-
-    .sub-div-4 > input {
-        all: unset;
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        height: 30px;
-        padding: 9px 0 0 7px;
-    }
-
-    .div-5 {
-        display: flex;
-    }
-
-        .div-5 > .sub-div-5 {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-            .div-5 > .sub-div-5 > button {
-                all: unset;
-                height: 50px;
-                width: 56%;
-                border-radius: 29px;
-                text-align: center;
-                background: #1194FF;
-                opacity: 0.5;
-                color: #FFF;
-                font-weight: 600;
-                font-family: Verdana;
-            }
-
-    .div-6 {
-        display: flex;
-    }
-
-        .div-6 > .sub-div-6 {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-        }
-
-            .div-6 > .sub-div-6 > a {
-                text-decoration: none;
-                color: #1194FF;
-                font-size: 14px;
-                margin-top: 20px;
-                font-family: Verdana;
-            }
-
-    @media only screen and (max-width: 480px) and (min-width: 320px) {
-        .div-3 > .sub-div-3, .div-4 > .sub-div-4 {
-            width: 85%;
-        }
-
-        .div-5 > .sub-div-5 > button {
-            width: 85.5%;
-        }
-    }
-
-    @media only screen and (max-width: 800px) and (min-width: 481px) {
-        .div-3 > .sub-div-3, .div-4 > .sub-div-4 {
-            width: 70%;
-        }
-
-        .div-5 > .sub-div-5 > button {
-            width: 71%;
-        }
-    }
 </style>
