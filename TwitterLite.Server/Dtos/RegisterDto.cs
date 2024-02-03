@@ -18,7 +18,7 @@ namespace TwitterLite.Server.Dtos
          * The password must be at least 12 characters long, but no more than 64
         */
         [Required]
-        [RegularExpression(@"^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|\]).{12,32}$")]
+        [RegularExpression(@"^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[\]:;<>,.?/~_+\-=|\\]).{12,64}$")]
         public string Password { get; set; }
     }
 }
