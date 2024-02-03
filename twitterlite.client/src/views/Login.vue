@@ -2,7 +2,7 @@
     import { useField, useForm } from 'vee-validate'
     import { useRouter } from 'vue-router';
     import { ref } from 'vue';
-    import FlashMessage from "../components/FlashMessage.vue";
+    import FlashMessage from '../components/FlashMessage.vue';
 
     const { handleSubmit } = useForm({
         validationSchema: {
@@ -46,6 +46,7 @@
     const username = useField('username')
     const password = useField('password')
     const router = useRouter();
+
     const showFlashMessage = ref(false);
 
     const submit = handleSubmit(values => {
@@ -69,7 +70,7 @@
 </script>
 
 <template>
-    <FlashMessage v-if="showFlashMessage" content='Login failed'></FlashMessage>
+    <FlashMessage v-if="showFlashMessage" content="Login failed."></FlashMessage>
     <div>
         <div class="mainLogo">
             <img src="/src/images/logo.png" alt="LogoTwitterLite" />
