@@ -29,7 +29,7 @@ namespace TwitterLite.Server.Controllers
                 Password = BCrypt.Net.BCrypt.HashPassword(registerDto.Password),
             };
 
-            if (userRepository.GetByUsername(user.Username) != null) return BadRequest();
+            if (userRepository.GetByUsername(user.Username) != null) return BadRequest(new { errorMessage = "Username already exists" });
 
             User userCreated = userRepository.Create(user);
 
