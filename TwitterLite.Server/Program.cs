@@ -7,13 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddCors();
-builder.Services.AddDbContext<UserContext>(options =>
+builder.Services.AddDbContext<DataContext>(options =>
 {
-    // Configure the UserContext to use SQL Server
-    options.UseSqlServer("Server=88.123.181.135,16300;Initial Catalog=TwitterLite;User ID=TwitterLite;Password=jaq?#bfQP65!;TrustServerCertificate=True;");
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
-builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<UserRepository>();
+
 
 builder.Services.AddControllers();
 

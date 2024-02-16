@@ -4,43 +4,32 @@ namespace TwitterLite.Server.Data
 {
     public class UserRepository
     {
-        private readonly UserContext userContext;
+        private readonly DataContext _dbContext;
 
-        public UserRepository(UserContext userContext)
+        public UserRepository(DataContext dbContext)
         {
-            this.userContext = userContext;
+            _dbContext = dbContext;
         }
-        public User Create(User user)
+
+        public void Create(User user)
         {
-            userContext.Users.Add(user);
-            userContext.SaveChanges();
+            _dbContext.Users.Add(user);
+            _dbContext.SaveChanges();
+        }
 
-            var userCreated = userContext.Users.FirstOrDefault(xUser => xUser.Username == user.Username);
+        public void Update(User user)
+        {
+            _dbContext.Users.Update(user);
+        }
 
-            if (userCreated == null) return null;
-            if (user.Username != userCreated.Username) return null;
-
-            return userCreated;
+        public User GetById(int id) 
+        { 
+            return _dbContext.Users.FirstOrDefault(u => u.Id == id);
         }
 
         public User GetByUsername(string username)
         {
-            var user = userContext.Users.FirstOrDefault(user => user.Username == username);
-
-            if (user == null) return null;
-            if (user.Username != username) return null;
-
-            return user;
-        }
-
-        public User GetById(int id)
-        {
-            var user = userContext.Users.FirstOrDefault(user => user.Id == id);
-
-            if (user == null) return null;
-            if (user.Id != id) return null;
-
-            return user;
+            return _dbContext.Users.FirstOrDefault(u => u.Username == username);
         }
     }
 }

@@ -31,9 +31,9 @@ namespace TwitterLite.Server.Controllers
 
             if (userRepository.GetByUsername(user.Username) != null) return BadRequest(new { errorMessage = "Username already exists" });
 
-            User userCreated = userRepository.Create(user);
+            userRepository.Create(user);
 
-            return Ok(new { userCreated });
+            return Ok();
         }
 
         [HttpPost("login")]
@@ -58,16 +58,7 @@ namespace TwitterLite.Server.Controllers
         public new IActionResult User()
         {
             var jwtToken = Request.Cookies["jwtToken"];
-
-            JwtSecurityToken jwtSecurityToken;
-            try
-            {
-                jwtSecurityToken = jwtService.IsValid(jwtToken);
-            }
-            catch 
-            {
-                return BadRequest();
-            }
+            JwtSecurityToken jwtSecurityToken = jwtService.IsValid(jwtToken);
             
             User user = userRepository.GetById(int.Parse(jwtSecurityToken.Issuer));
 

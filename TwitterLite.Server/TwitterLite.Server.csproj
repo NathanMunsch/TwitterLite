@@ -31,4 +31,9 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Middlewares\" />
+  </ItemGroup>
+
 </Project>
