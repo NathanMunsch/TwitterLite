@@ -6,11 +6,11 @@ namespace TwitterLite.Server.Helpers
 {
     public class JwtService
     {
-        private string secureKey = "443754be9d8174437544690cd73e1f7f5384411fc01047f53849";
+        private readonly string _secureKey = "443754be9d8174437544690cd73e1f7f5384411fc01047f53849";
 
         public string Generate(int id)
         {
-            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secureKey));
+            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secureKey));
             var credentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256Signature);
             var jwtHeader = new JwtHeader(credentials);
 
@@ -23,7 +23,7 @@ namespace TwitterLite.Server.Helpers
         public JwtSecurityToken IsValid(string jwtToken)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(secureKey);
+            var key = Encoding.ASCII.GetBytes(_secureKey);
 
             tokenHandler.ValidateToken(jwtToken, new TokenValidationParameters
             {
@@ -34,7 +34,7 @@ namespace TwitterLite.Server.Helpers
                 ValidateLifetime = true,
             }, out SecurityToken validatedToken);
 
-            return (JwtSecurityToken) validatedToken;
+            return (JwtSecurityToken)validatedToken;
         }
     }
 }
