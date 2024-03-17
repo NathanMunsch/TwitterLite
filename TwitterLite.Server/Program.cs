@@ -14,7 +14,6 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<UserRepository>();
 
-
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -36,18 +35,10 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Use a MapWhen branch to conditionally apply middleware based on the request path
-app.MapWhen(context => !context.Request.Path.StartsWithSegments("/auth/register") && !context.Request.Path.StartsWithSegments("/auth/login"), branch =>
-{
-    branch.UseMiddleware<AuthMiddleware>();
+app.UseMiddleware<AuthMiddleware>();
+app.UseMiddleware<UserAdminMiddleware>();
 
-    // Map controllers and fallback to index.html if no other endpoint is matched
-    branch.UseEndpoints(endpoints =>
-    {
-        endpoints.MapControllers();
-        endpoints.MapFallbackToFile("/index.html");
-    });
-});
+app.MapControllers();
+app.MapFallbackToFile("/index.html");
 
 app.Run();
-
