@@ -50,7 +50,7 @@
 
     const submit = handleSubmit(values => {
         showFlashMessage.value = false;
-        fetch('https://localhost:7078/auth/register', {
+        fetch('https://localhost:7078/user/create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
