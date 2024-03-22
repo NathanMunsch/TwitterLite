@@ -73,35 +73,5 @@ namespace TwitterLite.Server.Controllers
 
             return Ok();
         }
-
-        [HttpGet("like/{id}")]
-        public IActionResult Like(int id)
-        {
-            var tweet = tweetRepository.GetById(id);
-            if (tweet == null) return NotFound();
-
-            var jwtToken = Request.Cookies["jwtToken"];
-            var jwtSecurityToken = jwtService.IsValid(jwtToken);
-            User user = userRepository.GetById(int.Parse(jwtSecurityToken.Issuer));
-
-            likeRepository.Create(user, tweet);
-
-            return Ok();
-        }
-
-        [HttpGet("unlike/{id}")]
-        public IActionResult Unlike(int id)
-        {
-            var tweet = tweetRepository.GetById(id);
-            if (tweet == null) return NotFound();
-
-            var jwtToken = Request.Cookies["jwtToken"];
-            var jwtSecurityToken = jwtService.IsValid(jwtToken);
-            User user = userRepository.GetById(int.Parse(jwtSecurityToken.Issuer));
-
-            likeRepository.Delete(user, tweet);
-
-            return Ok();
-        }
     }
 }
