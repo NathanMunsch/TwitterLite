@@ -6,10 +6,12 @@ namespace TwitterLite.Server.Data
     public class TweetRepository
     {
         private readonly DataContext _dbContext;
+        private readonly LikeRepository _likeRepository;
 
-        public TweetRepository(DataContext dbContext)
+        public TweetRepository(DataContext dbContext, LikeRepository likeRepository)
         {
             _dbContext = dbContext;
+            _likeRepository = likeRepository;
         }
 
         public void Create(Tweet tweet)
@@ -39,22 +41,39 @@ namespace TwitterLite.Server.Data
 
         public Tweet GetById(int id) 
         {
-            return _dbContext.Tweets.Include(t => t.LikedBy).FirstOrDefault(t => t.Id == id);
+            Tweet tweet = _dbContext.Tweets.FirstOrDefault(t => t.Id == id);
+            tweet.NumberOfLikes = _likeRepository.GetLikesCount(tweet);
+            return tweet;
         }
 
         public List<Tweet> GetRecentTweets()
         {
-            return _dbContext.Tweets.Include(t => t.LikedBy).OrderByDescending(t => t.CreatedAt).ToList();
+            List<Tweet> tweets = _dbContext.Tweets.OrderByDescending(t => t.CreatedAt).ToList();
+            foreach (var tweet in tweets)
+            {
+                tweet.NumberOfLikes = _likeRepository.GetLikesCount(tweet);
+            }
+            return tweets;
         }
 
         public List<Tweet> GetOldTweets()
         {
-            return _dbContext.Tweets.Include(t => t.LikedBy).OrderBy(t => t.CreatedAt).ToList();
+            List<Tweet> tweets = _dbContext.Tweets.OrderBy(t => t.CreatedAt).ToList();
+            foreach (var tweet in tweets)
+            {
+                tweet.NumberOfLikes = _likeRepository.GetLikesCount(tweet);
+            }
+            return tweets;
         }
 
         public List<Tweet> GetMostLikedTweets()
         {
-            return _dbContext.Tweets.Include(t => t.LikedBy).OrderByDescending(t => t.LikedBy.Count).ToList();
+            List<Tweet> tweets = _dbContext.Tweets.ToList();
+            foreach (var tweet in tweets)
+            {
+                tweet.NumberOfLikes = _likeRepository.GetLikesCount(tweet);
+            }
+            return tweets.OrderByDescending(t => t.NumberOfLikes).ToList();
         }
     }
 }

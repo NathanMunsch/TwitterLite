@@ -11,6 +11,11 @@ namespace TwitterLite.Server.Data
             _dbContext = dbContext;
         }
 
+        public int GetLikesCount(Tweet tweet)
+        {
+            return _dbContext.Likes.Count(l => l.TweetId == tweet.Id);
+        }
+
         public void Create(User user, Tweet tweet)
         {
             if (_dbContext.Likes.Any(l => l.UserId == user.Id && l.TweetId == tweet.Id))
