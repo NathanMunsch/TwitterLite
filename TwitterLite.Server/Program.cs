@@ -14,6 +14,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 });
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<TweetRepository>();
+builder.Services.AddScoped<LikeRepository>();
 
 builder.Services.AddControllers();
 

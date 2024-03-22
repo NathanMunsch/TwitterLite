@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -32,7 +33,8 @@ namespace TwitterLite.Server.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AuthorId = table.Column<int>(type: "int", nullable: false)
+                    AuthorId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,43 +43,42 @@ namespace TwitterLite.Server.Migrations
                         name: "FK_Tweets_Users_AuthorId",
                         column: x => x.AuthorId,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserLikedTweets",
+                name: "Likes",
                 columns: table => new
                 {
-                    LikedById = table.Column<int>(type: "int", nullable: false),
-                    LikesId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    TweetId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserLikedTweets", x => new { x.LikedById, x.LikesId });
+                    table.PrimaryKey("PK_Likes", x => new { x.TweetId, x.UserId });
                     table.ForeignKey(
-                        name: "FK_UserLikedTweets_Tweets_LikesId",
-                        column: x => x.LikesId,
+                        name: "FK_Likes_Tweets_TweetId",
+                        column: x => x.TweetId,
                         principalTable: "Tweets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserLikedTweets_Users_LikedById",
-                        column: x => x.LikedById,
+                        name: "FK_Likes_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Likes_UserId",
+                table: "Likes",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tweets_AuthorId",
                 table: "Tweets",
                 column: "AuthorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserLikedTweets_LikesId",
-                table: "UserLikedTweets",
-                column: "LikesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Username",
@@ -90,7 +91,7 @@ namespace TwitterLite.Server.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "UserLikedTweets");
+                name: "Likes");
 
             migrationBuilder.DropTable(
                 name: "Tweets");
