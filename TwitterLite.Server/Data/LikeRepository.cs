@@ -32,10 +32,5 @@ namespace TwitterLite.Server.Data
             _dbContext.Remove(new Like { UserId = user.Id, TweetId = tweet.Id });
             _dbContext.SaveChanges();
         }
-
-        public int NumberOfLikes(Tweet tweet)
-        {
-            return _dbContext.Likes.Count(l => l.TweetId == tweet.Id);
-        }
     }
 }
