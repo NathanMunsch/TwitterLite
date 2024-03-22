@@ -20,22 +20,6 @@ namespace TwitterLite.Server.Controllers
             this.jwtService = jwtService;
         }
 
-        [HttpPost("register")]
-        public IActionResult Register(RegisterDto registerDto)
-        {
-            User user = new User
-            {
-                Username = registerDto.Username,
-                Password = BCrypt.Net.BCrypt.HashPassword(registerDto.Password),
-            };
-
-            if (userRepository.GetByUsername(user.Username) != null) return BadRequest(new { errorMessage = "Username already exists" });
-
-            userRepository.Create(user);
-
-            return Ok();
-        }
-
         [HttpPost("login")]
         public IActionResult Login(LoginDto loginDto)
         {
