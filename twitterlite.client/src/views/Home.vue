@@ -21,6 +21,8 @@
     <br />
     <router-link to="/register">register</router-link>
     <br />
+    <router-link to="/admin">admin</router-link>
+    <br />
     <button @click="logout">Logout</button>
     <TweetDialog></TweetDialog>
 </template>
