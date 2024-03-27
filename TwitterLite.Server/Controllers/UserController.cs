@@ -27,6 +27,15 @@ namespace TwitterLite.Server.Controllers
             return Ok(new { users });
         }
 
+        [HttpGet("get/{id}")]
+        public IActionResult Get(int id)
+        {
+            User user = userRepository.GetById(id);
+            if (user == null) return NotFound();
+
+            return Ok(new { user });
+        }
+
         [HttpPost("create")]
         public IActionResult Create(RegisterDto registerDto)
         {

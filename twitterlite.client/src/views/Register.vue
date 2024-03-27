@@ -78,9 +78,7 @@
 <template>
     <FlashMessage v-if="showFlashMessage" :content="flashMessageContent"></FlashMessage>
     <div>
-        <div class="mainLogo">
-            <img src="/src/images/logo.png" alt="LogoTwitterLite" />
-        </div>
+        <v-img class="centered-image" :width="500" aspect-ratio="16/9" cover src="/src/images/logo.png" />
 
         <form @submit.prevent="submit" id="loginForm">
             <v-text-field v-model="username.value.value" :error-messages="username.errorMessage.value" label="Username"></v-text-field>
@@ -101,10 +99,11 @@
 </template>
 
 <style>
-    .mainLogo {
-        display: flex;
-        justify-content: center;
-        margin: 5%;
+    .centered-image {
+        display: block;
+        margin: auto;
+        margin-top: 5%;
+        margin-bottom: 5%;
     }
 
     #loginForm {
