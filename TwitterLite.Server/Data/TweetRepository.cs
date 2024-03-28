@@ -75,5 +75,10 @@ namespace TwitterLite.Server.Data
             }
             return tweets.OrderByDescending(t => t.NumberOfLikes).ToList();
         }
+
+        public int GetTweetsCount(User user)
+        {
+            return _dbContext.Tweets.Count(t => t.AuthorId == user.Id);
+        }
     }
 }

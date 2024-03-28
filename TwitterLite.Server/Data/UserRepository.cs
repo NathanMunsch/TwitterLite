@@ -37,17 +37,36 @@ namespace TwitterLite.Server.Data
 
         public List<User> GetAll()
         {
-            return _dbContext.Users.ToList();
+
+            List<User> users = _dbContext.Users.ToList();
+            foreach (var user in users)
+            {
+                user.NumberOfTweets = _tweetRepository.GetTweetsCount(user);
+            }
+
+            return users;
         }   
 
-        public User GetById(int id) 
-        { 
-            return _dbContext.Users.FirstOrDefault(u => u.Id == id);
+        public User GetById(int id)
+        {
+            User user = _dbContext.Users.FirstOrDefault(u => u.Id == id);
+            if (user != null)
+            {
+                user.NumberOfTweets = _tweetRepository.GetTweetsCount(user);
+            }
+            
+            return user;
         }
 
         public User GetByUsername(string username)
         {
-            return _dbContext.Users.FirstOrDefault(u => u.Username == username);
+            User user = _dbContext.Users.FirstOrDefault(u => u.Username == username);
+            if (user != null)
+            {
+                user.NumberOfTweets = _tweetRepository.GetTweetsCount(user);
+            }
+            
+            return user;
         }
 
         public void Delete(User user)
