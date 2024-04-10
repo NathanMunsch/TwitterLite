@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace TwitterLite.Server.Models
 {
@@ -11,5 +12,6 @@ namespace TwitterLite.Server.Models
         [JsonIgnore] public List<Tweet> Tweets { get; set; } = new List<Tweet>();
         [JsonIgnore] public List<Tweet> Likes { get; set; } = new List<Tweet>();
         public DateTime RegisteredAt { get; set; } = DateTime.Now;
+        [NotMapped] public int NumberOfTweets { get; set; }
     }
 }
