@@ -22,7 +22,7 @@ var app = builder.Build();
 
 // Configure Cross-Origin Resource Sharing (CORS)
 app.UseCors(options => options
-    .WithOrigins(new[] { "https://localhost:5173" })
+    .WithOrigins(new[] { "https://localhost:5173", "https://127.0.0.1:5173" })
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()

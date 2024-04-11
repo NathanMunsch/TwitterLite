@@ -1,3 +1,19 @@
+<script setup>
+    import { useStore } from 'vuex';
+  
+    const store = useStore();
+  
+    function logout() {
+        store.dispatch('auth/logout') // Remplacez 'yourModuleName' par le nom de votre module Vuex si nécessaire
+        .then(() => {
+            // Traitement en cas de succès, si nécessaire
+        })
+        .catch((error) => {
+            console.error('Logout failed:', error); // Gestion des erreurs
+        });
+    }
+</script>
+
 <template>
     <v-tooltip text="Logout">
         <template v-slot:activator="{ props }">
@@ -5,21 +21,6 @@
         </template>
     </v-tooltip>
 </template>
-<script setup>
-    import { useRouter } from 'vue-router';
-
-    const router = useRouter();
-
-    function logout() {
-        fetch('https://localhost:7078/auth/logout', {
-            method: 'GET',
-            credentials: 'include'
-        }).then(response => {
-            if (response.ok) {
-                router.push('/login')
-            }
-        })
-    }
-</script>
+  
 <style scoped>
 </style>

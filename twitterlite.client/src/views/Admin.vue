@@ -1,48 +1,20 @@
 <script setup>
-    import { onMounted, ref } from "vue";
-    import FlashMessage from '../components/FlashMessage.vue';
+import { computed, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import FlashMessage from '@/components/FlashMessage.vue'; 
 
-    var users = ref([]);
-    const showFlashMessage = ref(false);
+const store = useStore();
 
-    async function getUsers() {
-        try {
-            const response = await fetch('https://localhost:7078/user/all', {
-                method: 'GET',
-                credentials: 'include'
-            });
-            if (!response.ok) {
-                throw new Error('Réponse réseau non réussie');
-            }
-            const data = await response.json();
-            users.value = data.users;
-        } catch (error) {
-            console.error("Erreur lors de la récupération des utilisateurs:", error);
-        }
-    }
+const users = computed(() => store.state.admin.users);
+const showFlashMessage = computed(() => store.state.admin.showFlashMessage);
 
-    async function deleteUser(userId) {
+onMounted(() => {
+  store.dispatch('admin/getUsers');
+});
 
-        try {
-            const response = await fetch('https://localhost:7078/admin/delete-user/' + userId, {
-                method: 'DELETE',
-                credentials: 'include'
-            });
-            if (!response.ok) {
-                throw new Error('Réponse réseau non réussie');
-            }
-            else {
-                users.value = users.value.filter(user => user.id !== userId);
-                showFlashMessage.value = true;
-            }
-        } catch (error) {
-            console.error("Erreur lors de la récupération des utilisateurs:", error);
-        }
-    }
-
-    onMounted(() => {
-        getUsers();
-    })
+const deleteUser = (userId) => {
+  store.dispatch('admin/deleteUser', userId); 
+};
 </script>
 
 <template>
