@@ -28,7 +28,7 @@ export default {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        commit('setUsers', data.users); // Assuming the response body has a `users` property
+        commit('setUsers', data.users);
       } catch (error) {
         console.error('Error fetching users:', error);
       }
@@ -46,7 +46,6 @@ export default {
           commit('removeUser', userId);
           commit('setShowFlashMessage', true);
 
-          // Hide the flash message after a delay
           setTimeout(() => {
             commit('setShowFlashMessage', false);
           }, 3000);

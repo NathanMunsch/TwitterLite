@@ -81,9 +81,9 @@
         <v-img class="centered-image" :width="500" aspect-ratio="16/9" cover src="/src/images/logo.png" />
 
         <form @submit.prevent="submit" id="loginForm">
-            <v-text-field v-model="username.value.value" :error-messages="username.errorMessage.value" label="Username"></v-text-field>
+            <v-text-field style="color:lightgrey;" v-model="username.value.value" :error-messages="username.errorMessage.value" label="Username"></v-text-field>
 
-            <v-text-field v-model="password.value.value" type="password" :error-messages="password.errorMessage.value" label="Password"></v-text-field>
+            <v-text-field style="color:lightgrey;" v-model="password.value.value" type="password" :error-messages="password.errorMessage.value" label="Password"></v-text-field>
 
             <v-btn class="me-4" type="submit">
                 Register
@@ -91,7 +91,7 @@
         </form>
 
         <div id="createAccount">
-            <p>Already have an account ? </p>
+            <p style="color:lightgrey;">Already have an account ? </p>
             <router-link to="/login">Login</router-link>
         </div>
 
