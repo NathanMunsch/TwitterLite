@@ -13,18 +13,15 @@ namespace TwitterLite.Server.Controllers
     {
         private readonly UserRepository userRepository;
         private readonly JwtService jwtService;
+        private readonly LikeRepository likeRepository;
+        private readonly TweetRepository tweetRepository;
 
-        public UserController(UserRepository userRepository, JwtService jwtService)
+        public UserController(UserRepository userRepository, JwtService jwtService, LikeRepository likeRepository, TweetRepository tweetRepository)
         {
             this.userRepository = userRepository;
             this.jwtService = jwtService;
-        }
-
-        [HttpGet("all")]
-        public IActionResult All()
-        {
-            var users = userRepository.GetAll();
-            return Ok(new { users });
+            this.likeRepository = likeRepository;
+            this.tweetRepository = tweetRepository;
         }
 
         [HttpGet("get/{id}")]
@@ -87,6 +84,21 @@ namespace TwitterLite.Server.Controllers
             userRepository.Delete(user);
 
             return Ok();
+        }
+
+        [HttpGet("has-liked/{id}")]
+        public IActionResult HasLiked(int id)
+        {
+            var jwtToken = Request.Cookies["jwtToken"];
+            JwtSecurityToken jwtSecurityToken = jwtService.IsValid(jwtToken);
+            User user = userRepository.GetById(int.Parse(jwtSecurityToken.Issuer));
+
+            Tweet tweet = tweetRepository.GetById(id);
+
+            if (likeRepository.IsLikedBy(tweet, user)) return Ok();
+            
+            return BadRequest();
+            
         }
     }
 }

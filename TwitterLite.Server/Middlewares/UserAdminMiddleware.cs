@@ -14,8 +14,7 @@ namespace TwitterLite.Server.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly string[] _routes = { 
-            "/admin",
-            "/user/all"
+            "/admin"
         };
 
         public UserAdminMiddleware(RequestDelegate next)

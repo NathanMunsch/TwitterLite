@@ -17,6 +17,13 @@ namespace TwitterLite.Server.Controllers
             this.tweetRepository = tweetRepository;
         }
 
+        [HttpGet("all-user")]
+        public IActionResult All()
+        {
+            var users = userRepository.GetAll();
+            return Ok(new { users });
+        }
+
         [HttpDelete("delete-user/{id}")]
         public IActionResult DeleteUser(int id)
         {

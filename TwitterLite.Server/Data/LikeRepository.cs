@@ -18,7 +18,7 @@ namespace TwitterLite.Server.Data
 
         public void Create(User user, Tweet tweet)
         {
-            if (_dbContext.Likes.Any(l => l.UserId == user.Id && l.TweetId == tweet.Id))
+            if (IsLikedBy(tweet, user))
             {
                 return;
             }
@@ -29,13 +29,18 @@ namespace TwitterLite.Server.Data
 
         public void Delete(User user, Tweet tweet)
         {
-            if (!_dbContext.Likes.Any(l => l.UserId == user.Id && l.TweetId == tweet.Id))
+            if (!IsLikedBy(tweet, user))
             {
                 return;
             }
 
             _dbContext.Remove(new Like { UserId = user.Id, TweetId = tweet.Id });
             _dbContext.SaveChanges();
+        }
+
+        public bool IsLikedBy(Tweet tweet, User user)
+        {
+            return _dbContext.Likes.Any(l => l.UserId == user.Id && l.TweetId == tweet.Id);
         }
     }
 }
