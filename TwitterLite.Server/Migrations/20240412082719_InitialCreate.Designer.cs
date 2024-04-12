@@ -12,7 +12,7 @@ using TwitterLite.Server.Data;
 namespace TwitterLite.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240327152505_InitialCreate")]
+    [Migration("20240412082719_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
