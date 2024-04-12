@@ -20,7 +20,7 @@ namespace TwitterLite.Server.Data
 
         public bool IsTheAuthor(User user, Tweet tweet)
         {
-            return tweet.Author.Id == user.Id;
+            return tweet.AuthorId == user.Id;
         }
 
         public void Create(User user)
