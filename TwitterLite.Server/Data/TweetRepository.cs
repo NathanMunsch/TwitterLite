@@ -42,6 +42,10 @@ namespace TwitterLite.Server.Data
         public Tweet GetById(int id) 
         {
             Tweet tweet = _dbContext.Tweets.FirstOrDefault(t => t.Id == id);
+            if (tweet == null)
+            {
+                return tweet;
+            }
             tweet.NumberOfLikes = _likeRepository.GetLikesCount(tweet);
             return tweet;
         }
