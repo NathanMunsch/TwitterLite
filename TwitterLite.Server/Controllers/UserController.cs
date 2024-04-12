@@ -94,11 +94,11 @@ namespace TwitterLite.Server.Controllers
             User user = userRepository.GetById(int.Parse(jwtSecurityToken.Issuer));
 
             Tweet tweet = tweetRepository.GetById(id);
+            if (tweet == null) return BadRequest();
 
             if (likeRepository.IsLikedBy(tweet, user)) return Ok();
             
-            return BadRequest();
-            
+            return NotFound();
         }
     }
 }
