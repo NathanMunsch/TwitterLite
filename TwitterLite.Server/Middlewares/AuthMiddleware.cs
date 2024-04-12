@@ -25,7 +25,8 @@ namespace TwitterLite.Server.Middlewares
             "/user/all",
             "/user/update",
             "/user/delete",
-            "/user/get"
+            "/user/get",
+            "/user/has-liked"
         };
 
         public AuthMiddleware(RequestDelegate next)
