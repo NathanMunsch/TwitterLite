@@ -71,6 +71,7 @@
         }).then(response => {
             if (response.ok) {
                 showFlashMessageSuccess.value = true;
+                closeDialog();
             } else {
                 showFlashMessageError.value = true;
             }
