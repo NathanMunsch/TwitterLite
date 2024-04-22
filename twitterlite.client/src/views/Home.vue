@@ -66,10 +66,16 @@
         }
     }
 
-    onMounted(() => {
+   onMounted(() => {
         getUserID();
         getAllTweets();
     });
+
+    // retrieve tweets every 5 seconds
+    setInterval(() => {
+        getUserID();
+        getAllTweets();
+    }, 5000)
 </script>
 
 <style scoped>
