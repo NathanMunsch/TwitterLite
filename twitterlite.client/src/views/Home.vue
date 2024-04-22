@@ -80,7 +80,7 @@
 
 <style scoped>
     .avatar {
-        position: absolute;
+        position: fixed;
         top: 0;
         right: 0;
         margin: 10px;
