@@ -4,7 +4,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import router from './router';
-import store from './store'; // Importez votre store Vuex ici
+import store from './store';
 
 // Vuetify
 import 'vuetify/styles'
@@ -28,7 +28,7 @@ const vuetify = createVuetify({
 const app = createApp(App);
 
 app.use(router);
-app.use(store); // Ajoutez le store à votre application
+app.use(store);
 app.use(vuetify);
 
 app.mount('#app');

@@ -20,7 +20,7 @@ export default {
   actions: {
     async getUsers({ commit }) {
       try {
-        const response = await fetch('https://localhost:7078/user/all', {
+        const response = await fetch('https://localhost:7078/admin/all-user', {
           method: 'GET',
           credentials: 'include',
         });
@@ -28,7 +28,7 @@ export default {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        commit('setUsers', data.users);
+        commit('setUsers', data.user);
       } catch (error) {
         console.error('Error fetching users:', error);
       }
