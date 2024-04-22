@@ -58,7 +58,10 @@
             method: 'GET',
             credentials: 'include',
         }).then(response => {
-            if (!response.ok) {
+            if (response.ok) {
+                liked.value = true;
+            }
+            else {
                 console.log('Erreur lors de la tentative de like du tweet')
             }
         });
@@ -70,9 +73,12 @@
             method: 'DELETE',
             credentials: 'include',
         }).then(response => {
-            if (!response.ok) {
+            if (response.ok) {
+                liked.value = false;
+            } else {
                 console.log('Erreur lors de la tentative de suppression de like du tweet')
             }
+
         });
     }
 
