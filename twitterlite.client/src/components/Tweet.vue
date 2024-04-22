@@ -10,7 +10,7 @@
         <v-card-text class="tweetContent">{{ props.content }}</v-card-text>
         <div class="Interaction">
             <v-icon color="grey" class="mr-auto" style="margin: 8px;">mdi-comment</v-icon>
-            <v-icon v-if="liked" color="red">mdi-heart</v-icon>
+            <v-icon v-if="liked" @click="unlikeTweet(props.tweetID)" color="red">mdi-heart</v-icon>
             <v-icon v-else color="grey" @click="likeTweet(props.tweetID)">mdi-heart-outline</v-icon>
             <p class="likeCount">{{ props.likeNumber }}</p>
             <v-icon v-if="isAdmin" color="blue" class="ml-auto" style="margin: 8px;">mdi-delete</v-icon>
@@ -54,13 +54,24 @@
     }
 
     function likeTweet(tweetID) {
-        console.log("u2")
         fetch('https://localhost:7078/tweet/like/create/' + tweetID, {
             method: 'GET',
             credentials: 'include',
         }).then(response => {
             if (!response.ok) {
                 console.log('Erreur lors de la tentative de like du tweet')
+            }
+        });
+    }
+
+    function unlikeTweet(tweetID) {
+        console.log("u2")
+        fetch('https://localhost:7078/tweet/like/delete/' + tweetID, {
+            method: 'DELETE',
+            credentials: 'include',
+        }).then(response => {
+            if (!response.ok) {
+                console.log('Erreur lors de la tentative de suppression de like du tweet')
             }
         });
     }
