@@ -34,6 +34,24 @@
     const username = ref('');
     const isAdmin = ref(false);
     const liked = ref(false);
+    const showFlashMessageSuccess = ref(false);
+    const showFlashMessageError = ref(false);
+
+    function deleteTweet(tweetID) {
+        showFlashMessageSuccess.value = false;
+        showFlashMessageError.value = false;
+        fetch('https://localhost:7078/tweet/delete/' + tweetID, {
+            method: 'DELETE',
+            credentials: 'include',
+        }).then(response => {
+            if (response.ok) {
+                showFlashMessageSuccess.value = false;
+            }
+            else {
+                showFlashMessageError.value = false;
+            }
+        });
+    }
 
     async function getUser() {
         try {
