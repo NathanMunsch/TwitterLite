@@ -12,13 +12,17 @@
             <v-icon color="grey" class="mr-auto" style="margin: 8px;">mdi-comment</v-icon>
             <v-icon v-if="liked" @click="unlikeTweet(props.tweetID)" color="red">mdi-heart</v-icon>
             <v-icon v-else color="grey" @click="likeTweet(props.tweetID)">mdi-heart-outline</v-icon>
-            <p class="likeCount">{{ props.likeNumber }}</p>
-            <v-icon v-if="isAdmin" color="blue" class="ml-auto" style="margin: 8px;">mdi-delete</v-icon>
+            <p v-if="props.likeNumber > 0" class="likeCount">{{ props.likeNumber }}</p>
+            <v-icon v-if="props.isLoggedUserAdmin" @click="deleteTweet(props.tweetID)" color="blue" class="ml-auto" style="margin: 8px;">mdi-delete</v-icon>
+            <v-icon v-else-if="props.loggedUserID == props.authorID" @click="deleteOwnTweet(props.tweetID)" class="ml-auto" style="margin: 8px;">mdi-delete</v-icon>
         </div>
     </v-card>
+    <FlashMessage v-if="showFlashMessageSuccess" content="Tweet deleted successfully."></FlashMessage>
+    <FlashMessage v-if="showFlashMessageError" content="An error occurred."></FlashMessage>
 </template>
 <script setup>
     import { ref, onMounted } from 'vue';
+    import FlashMessage from './FlashMessage.vue';
 
     const props = defineProps({
         authorID: Number,
@@ -26,10 +30,12 @@
         tweetID: Number,
         createdAt: String,
         likeNumber: Number,
-        author: Object
+        author: Object,
+        isLoggedUserAdmin: Boolean,
+        loggedUserID: Number
     });
 
-    var date = props.createdAt.substring(0, 19);
+    var date = props.createdAt.substring(0, 19);  
     var formattedDate = date.replace("T", " ");
     const username = ref('');
     const isAdmin = ref(false);
@@ -40,15 +46,31 @@
     function deleteTweet(tweetID) {
         showFlashMessageSuccess.value = false;
         showFlashMessageError.value = false;
+        fetch('https://localhost:7078/admin/delete-tweet/' + tweetID, {
+            method: 'DELETE',
+            credentials: 'include',
+        }).then(response => {
+            if (response.ok) {
+                showFlashMessageSuccess.value = true;
+            }
+            else {
+                showFlashMessageError.value = true;
+            }
+        });
+    }
+
+    function deleteOwnTweet(tweetID) {
+        showFlashMessageSuccess.value = false;
+        showFlashMessageError.value = false;
         fetch('https://localhost:7078/tweet/delete/' + tweetID, {
             method: 'DELETE',
             credentials: 'include',
         }).then(response => {
             if (response.ok) {
-                showFlashMessageSuccess.value = false;
+                showFlashMessageSuccess.value = true;
             }
             else {
-                showFlashMessageError.value = false;
+                showFlashMessageError.value = true;
             }
         });
     }
@@ -64,8 +86,6 @@
             }
             const data = await response.json();
             username.value = data.user.username;
-            isAdmin.value = data.user.isAdmin;
-            console.log(isAdmin.value)
         } catch (error) {
             console.error("Erreur lors de la récupération des utilisateurs:", error);
         }
@@ -116,7 +136,6 @@
     onMounted(() => {
         getUser();
         hasUserLiked(props.tweetID);
-        console.log(liked.value)
     });
 </script>
 <style scoped>
