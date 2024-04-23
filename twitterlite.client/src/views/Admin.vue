@@ -5,12 +5,12 @@ import FlashMessage from '@/components/FlashMessage.vue';
 
 const store = useStore();
 
-const users = computed(() => store.state.admin.users);
-const showFlashMessage = computed(() => store.state.admin.showFlashMessage);
-
 onMounted(() => {
   store.dispatch('admin/getUsers');
 });
+
+const users = computed(() => store.state.admin.users);
+const showFlashMessage = computed(() => store.state.admin.showFlashMessage);
 
 const deleteUser = (userId) => {
   store.dispatch('admin/deleteUser', userId); 

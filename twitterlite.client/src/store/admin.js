@@ -28,7 +28,7 @@ export default {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        commit('setUsers', data.user);
+        commit('setUsers', data.users);
       } catch (error) {
         console.error('Error fetching users:', error);
       }
