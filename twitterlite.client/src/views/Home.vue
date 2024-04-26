@@ -1,16 +1,24 @@
 <template>
-    <router-link to="/profile">
-        <v-avatar class="avatar">
-            <v-img :src="'https://api.dicebear.com/8.x/pixel-art/svg?seed=' + id"></v-img>
-        </v-avatar>
-    </router-link>
-    <v-tooltip text="Admin Page">
+    <v-menu :location="bottom" rounded>
         <template v-slot:activator="{ props }">
-            <router-link to="/admin">
-                <v-btn style="position: fixed; top: 50px; left: 30px;" icon="mdi-security" size="large" v-bind="props"></v-btn>
-            </router-link>
+            <v-avatar class="avatar">
+                <v-img :src="'https://api.dicebear.com/8.x/pixel-art/svg?seed=' + id" v-bind="props"></v-img>
+            </v-avatar>
         </template>
-    </v-tooltip>
+        <v-list>
+            <v-list-item>
+                <router-link to="/profile" class="router-link-custom">
+                    <v-list-item-title>Profile</v-list-item-title>
+                </router-link>
+                <v-divider class="my-3" v-if="isAdmin"></v-divider>
+                <router-link to="/admin" v-if="isAdmin" class="router-link-custom">
+                    <v-list-item-title>Admin Page</v-list-item-title>
+                </router-link>
+                <v-divider class="my-3"></v-divider>
+                <v-list-item-title style="color: red; cursor: pointer;" @click="logout">Logout</v-list-item-title>
+            </v-list-item>
+        </v-list>
+    </v-menu>
     <v-tooltip text="Filter">
         <template v-slot:activator="{ props }">
             <v-btn style="position: fixed; bottom: 120px; right: 30px;" icon="mdi-filter-menu" size="large" v-bind="props"></v-btn>
@@ -30,13 +38,24 @@
 
 <script setup>
     import { onMounted, ref } from 'vue';
+    import { useStore } from 'vuex';
     import Tweet from "../components/Tweet.vue";
     import TweetDialog from "../components/Dialogs/TweetDialog.vue";
 
     const id = ref('');
     const tweetDialogIsOpen = ref(false);
     const isAdmin = ref(false);
+    const store = useStore();
     var tweets = ref([]);
+
+    function logout() {
+        store.dispatch('auth/logout')
+            .then(() => {
+            })
+            .catch((error) => {
+                console.error('Logout failed:', error);
+            });
+    }
 
     async function getUserID() {
         try {
@@ -91,9 +110,10 @@
 <style scoped>
     .avatar {
         position: fixed;
-        top: 0;
-        right: 0;
+        top: 10px;
+        right: 10px;
         margin: 10px;
+        cursor: pointer;
     }
 
     .tweet {
@@ -108,5 +128,10 @@
         align-items: center;
         margin: auto;
         width: 50px;
+    }
+
+    .router-link-custom {
+        text-decoration: none;
+        color: inherit;
     }
 </style>
