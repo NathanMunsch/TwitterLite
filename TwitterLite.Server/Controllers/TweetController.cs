@@ -45,6 +45,13 @@ namespace TwitterLite.Server.Controllers
             return Ok(new { tweets });
         }
 
+        [HttpGet("get-user-tweet/{userId}")]
+        public IActionResult GetUserTweet(int userId) 
+        {
+            var tweets = tweetRepository.GetByUserId(userId);
+            return Ok(new { tweets });
+        }
+
         [HttpPost("create")]
         public IActionResult Create(TweetDto tweetDto)
         {

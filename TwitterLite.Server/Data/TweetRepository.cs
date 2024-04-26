@@ -50,6 +50,16 @@ namespace TwitterLite.Server.Data
             return tweet;
         }
 
+        public List<Tweet> GetByUserId(int userId)
+        {
+            List<Tweet> tweets = _dbContext.Tweets.Where(t => t.AuthorId == userId).ToList();
+            foreach (var tweet in tweets)
+            {
+                tweet.NumberOfLikes = _likeRepository.GetLikesCount(tweet);
+            }
+            return tweets;   
+        }
+
         public List<Tweet> GetRecentTweets()
         {
             List<Tweet> tweets = _dbContext.Tweets.OrderByDescending(t => t.CreatedAt).ToList();
