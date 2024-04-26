@@ -1,9 +1,8 @@
 <script setup>
 import { computed, onMounted } from 'vue';
-import { useStore } from 'vuex';
 import FlashMessage from '@/components/FlashMessage.vue'; 
+import store from '../store';
 
-const store = useStore();
 
 onMounted(() => {
   store.dispatch('admin/getUsers');

@@ -4,7 +4,7 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Profile from '../views/Profile.vue'
 import Admin from '../views/Admin.vue'
-
+import store from '../store';
 
 const authMiddleware = (to, from, next) => {
   fetch('https://localhost:7078/auth/user', {
@@ -14,7 +14,7 @@ const authMiddleware = (to, from, next) => {
       if (response.ok) {
           return next();
       } else {
-          router.push('/login');
+          return next('/login');
       }
   });
 };
@@ -24,7 +24,7 @@ const routes = [
             path: '/home', 
             name: 'home',
             component: Home,
-            meta: { middleware: authMiddleware }  
+            meta: { middleware: authMiddleware }
         },
         
         { 
