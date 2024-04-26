@@ -1,5 +1,3 @@
-import { createStore } from 'vuex';
-
 export default {
   namespaced: true,
   state: {

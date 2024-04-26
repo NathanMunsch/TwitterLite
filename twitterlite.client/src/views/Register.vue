@@ -2,6 +2,7 @@
     import { useField, useForm } from 'vee-validate'
     import { ref } from 'vue';
     import FlashMessage from '../components/FlashMessage.vue';
+    import store from '../store';
 
     const { handleSubmit } = useForm({
         validationSchema: {
@@ -50,29 +51,18 @@
 
     const submit = handleSubmit(values => {
         showFlashMessage.value = false;
-        fetch('https://localhost:7078/user/create', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({
-                'username': values.username,
-                'password': values.password
+        store.dispatch('auth/register', { username: values.username, password: values.password })
+            .then(message => {
+                flashMessageContent.value = message;
+                showFlashMessage.value = true;
             })
-        }).then(response => {
-            if (response.ok) {
-                flashMessageContent.value = 'Account successfully created.';
+            .catch(error => {
+                flashMessageContent.value = error;
                 showFlashMessage.value = true;
-            } else {
-                flashMessageContent.value = 'Error, your account has not been created.';
-                response.json().then(data => {
-                    if (data.errorMessage != null) {
-                        flashMessageContent.value += " " + data.errorMessage + ".";
-                    }
-                });
-                showFlashMessage.value = true;
-            }
-        });
-    })
+            });
+    });
+
+
 </script>
 
 <template>
