@@ -28,85 +28,85 @@
     <p style="color: lightgrey; text-align:center; font-size:20px; margin-top: 250px;" v-if="tweets.length == 0">Nothing to see here...</p>
 </template>
 
-        <script setup>
-            import { onMounted, ref } from 'vue';
-            import Tweet from "../components/Tweet.vue";
-            import TweetDialog from "../components/Dialogs/TweetDialog.vue";
+<script setup>
+    import { onMounted, ref } from 'vue';
+    import Tweet from "../components/Tweet.vue";
+    import TweetDialog from "../components/Dialogs/TweetDialog.vue";
 
-            const id = ref('');
-            const tweetDialogIsOpen = ref(false);
-            const isAdmin = ref(false);
-            var tweets = ref([]);
+    const id = ref('');
+    const tweetDialogIsOpen = ref(false);
+    const isAdmin = ref(false);
+    var tweets = ref([]);
 
-            async function getUserID() {
-                try {
-                    const response = await fetch('https://localhost:7078/auth/user', {
-                        method: 'GET',
-                        credentials: 'include'
-                    });
-                    if (!response.ok) {
-                        throw new Error('Réponse réseau non réussie');
-                    }
-                    const data = await response.json();
-                    id.value = data.user.id;
-                    isAdmin.value = data.user.isAdmin;
-                    console.log(isAdmin.value)
-                } catch (error) {
-                    console.error("Erreur lors de la récupération des utilisateurs:", error);
-                }
-            }
-
-            function openTweetDialog() {
-                tweetDialogIsOpen.value = true;
-            }
-
-            async function getAllTweets() {
-                try {
-                    const response = await fetch('https://localhost:7078/tweet/newest', {
-                        method: 'GET',
-                        credentials: 'include'
-                    });
-                    if (!response.ok) {
-                        throw new Error('Réponse réseau non réussie');
-                    }
-                    const data = await response.json();
-                    tweets.value = data.tweets;
-                } catch (error) {
-                    console.error("Erreur lors de la récupération des utilisateurs:", error);
-                }
-            }
-
-            onMounted(() => {
-                getUserID();
-                getAllTweets();
+    async function getUserID() {
+        try {
+            const response = await fetch('https://localhost:7078/auth/user', {
+                method: 'GET',
+                credentials: 'include'
             });
-
-            // retrieve tweets every 5 seconds
-            setInterval(() => {
-                getUserID();
-                getAllTweets();
-            }, 5000)
-        </script>
-
-        <style scoped>
-            .avatar {
-                position: fixed;
-                top: 0;
-                right: 0;
-                margin: 10px;
+            if (!response.ok) {
+                throw new Error('Réponse réseau non réussie');
             }
+            const data = await response.json();
+            id.value = data.user.id;
+            isAdmin.value = data.user.isAdmin;
+            console.log(isAdmin.value)
+        } catch (error) {
+            console.error("Erreur lors de la récupération des utilisateurs:", error);
+        }
+    }
 
-            .tweet {
-                width: 40%;
-                margin: auto;
-                margin-top: 8px;
-            }
+    function openTweetDialog() {
+        tweetDialogIsOpen.value = true;
+    }
 
-            .filters {
-                color: lightgrey;
-                display: flex;
-                align-items: center;
-                margin: auto;
-                width: 50px;
+    async function getAllTweets() {
+        try {
+            const response = await fetch('https://localhost:7078/tweet/newest', {
+                method: 'GET',
+                credentials: 'include'
+            });
+            if (!response.ok) {
+                throw new Error('Réponse réseau non réussie');
             }
-        </style>
+            const data = await response.json();
+            tweets.value = data.tweets;
+        } catch (error) {
+            console.error("Erreur lors de la récupération des utilisateurs:", error);
+        }
+    }
+
+    onMounted(() => {
+        getUserID();
+        getAllTweets();
+    });
+
+    // retrieve tweets every 5 seconds
+    setInterval(() => {
+        getUserID();
+        getAllTweets();
+    }, 5000)
+</script>
+
+<style scoped>
+    .avatar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        margin: 10px;
+    }
+
+    .tweet {
+        width: 40%;
+        margin: auto;
+        margin-top: 8px;
+    }
+
+    .filters {
+        color: lightgrey;
+        display: flex;
+        align-items: center;
+        margin: auto;
+        width: 50px;
+    }
+</style>

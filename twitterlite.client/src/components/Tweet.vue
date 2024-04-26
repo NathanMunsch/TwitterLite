@@ -6,18 +6,29 @@
             </v-avatar>
             <v-card-text class="Username">{{ username }}</v-card-text>
             <v-card-text class="TweetedAt">{{ formattedDate }}</v-card-text>
+            <v-menu :location="bottom">
+                <template v-slot:activator="{ props }">
+                    <v-icon v-bind="props" color="grey" style="margin-right: 10px;">mdi-dots-vertical</v-icon>
+                </template>
+                <v-list>
+                    <v-list-item>
+                        <v-list-item-title v-if="props.isLoggedUserAdmin" @click="deleteTweet(props.tweetID)">Delete(Admin)</v-list-item-title>
+                        <v-list-item-title v-else-if="props.loggedUserID == props.authorID" @click="deleteOwnTweet(props.tweetID)">Delete</v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
         </div>
         <v-card-text class="tweetContent">{{ props.content }}</v-card-text>
         <div class="Interaction">
-            <v-icon color="grey" class="mr-auto" style="margin: 8px;">mdi-comment</v-icon>
-            <v-icon v-if="liked" @click="unlikeTweet(props.tweetID)" color="red">mdi-heart</v-icon>
-            <v-icon v-else color="grey" @click="likeTweet(props.tweetID)">mdi-heart-outline</v-icon>
-            <p v-if="props.likeNumber > 0" class="likeCount">{{ props.likeNumber }}</p>
-            <v-icon v-if="props.isLoggedUserAdmin" @click="deleteTweet(props.tweetID)" color="blue" class="ml-auto" style="margin: 8px;">mdi-delete</v-icon>
-            <v-icon v-else-if="props.loggedUserID == props.authorID" @click="deleteOwnTweet(props.tweetID)" class="ml-auto" style="margin: 8px;">mdi-delete</v-icon>
+            <v-icon color="grey" class="mr-auto" style="margin-left: 150px;">mdi-comment</v-icon>
+            <div class="like">
+                <v-icon v-if="liked" @click="unlikeTweet(props.tweetID)" color="red">mdi-heart</v-icon>
+                <v-icon v-else color="grey" @click="likeTweet(props.tweetID)">mdi-heart-outline</v-icon>
+                <p v-if="props.likeNumber > 0" style="color: white;">{{ props.likeNumber }}</p>
+            </div>
         </div>
     </v-card>
-    <FlashMessage v-if="showFlashMessageSuccess" content="Tweet deleted successfully."></FlashMessage>
+    <FlashMessage v-if="showFlashMessageSuccess" content="Tweet deleted successfully."></FlashMessage> 
     <FlashMessage v-if="showFlashMessageError" content="An error occurred."></FlashMessage>
 </template>
 <script setup>
@@ -172,7 +183,9 @@
         align-items: center;
         margin-bottom: 8px;
     }
-    .likeCount{
-        color: white;
+    .like {
+        display: flex;
+        align-items: center;
+        margin-right: 150px;
     }
 </style>
