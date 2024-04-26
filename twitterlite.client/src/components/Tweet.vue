@@ -12,8 +12,8 @@
                 </template>
                 <v-list>
                     <v-list-item>
-                        <v-list-item-title v-if="props.isLoggedUserAdmin" @click="deleteTweet(props.tweetID)">Delete(Admin)</v-list-item-title>
-                        <v-list-item-title v-else-if="props.loggedUserID == props.authorID" @click="deleteOwnTweet(props.tweetID)">Delete</v-list-item-title>
+                        <v-list-item-title v-if="props.isLoggedUserAdmin" style="cursor: pointer;" @click="deleteTweet(props.tweetID)">Delete(Admin)</v-list-item-title>
+                        <v-list-item-title v-else-if="props.loggedUserID == props.authorID" style="cursor: pointer;" @click="deleteOwnTweet(props.tweetID)">Delete</v-list-item-title>
                     </v-list-item>
                 </v-list>
             </v-menu>
