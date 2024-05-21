@@ -1,4 +1,5 @@
 <template>
+   <!-- verif si le user est admin ou si le tweet appartient au user -->
     <v-menu :location="bottom" rounded>
         <template v-slot:activator="{ props }">
             <v-avatar class="avatar">
