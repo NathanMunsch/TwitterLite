@@ -19,14 +19,11 @@
             </v-menu>
         </div>
         <v-card-text class="tweetContent">{{ props.content }}</v-card-text>
-        <div class="Interaction">
-            <v-icon color="grey" class="mr-auto" style="margin-left: 150px;">mdi-comment</v-icon>
             <div class="like">
                 <v-icon v-if="liked" @click="unlikeTweet(props.tweetID)" color="red">mdi-heart</v-icon>
                 <v-icon v-else color="grey" @click="likeTweet(props.tweetID)">mdi-heart-outline</v-icon>
                 <p v-if="props.likeNumber > 0" style="color: white;">{{ props.likeNumber }}</p>
             </div>
-        </div>
     </v-card>
     <FlashMessage v-if="showFlashMessageSuccess" content="Tweet deleted successfully."></FlashMessage> 
     <FlashMessage v-if="showFlashMessageError" content="An error occurred."></FlashMessage>
@@ -178,14 +175,9 @@
     .tweetContent{
         color: white;
     }
-    .Interaction {
-        display: flex;
-        align-items: center;
-        margin-bottom: 8px;
-    }
     .like {
         display: flex;
-        align-items: center;
-        margin-right: 150px;
+        justify-content: center;
+        margin-bottom: 4px;
     }
 </style>

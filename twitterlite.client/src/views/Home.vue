@@ -1,5 +1,5 @@
 <template>
-   <!-- verif si le user est admin ou si le tweet appartient au user -->
+    <!-- verif si le user est admin ou si le tweet appartient au user -->
     <v-menu :location="bottom" rounded>
         <template v-slot:activator="{ props }">
             <v-avatar class="avatar">
@@ -22,7 +22,7 @@
     </v-menu>
     <v-tooltip text="Filter">
         <template v-slot:activator="{ props }">
-            <v-btn style="position: fixed; bottom: 120px; right: 30px;" icon="mdi-filter-menu" size="large" v-bind="props"></v-btn>
+            <v-btn style="position: fixed; bottom: 120px; right: 30px;" icon="mdi-filter-menu" size="large" v-bind="props" @click="openFilterDialog"></v-btn>
         </template>
     </v-tooltip>
     <v-tooltip text="Tweet">
@@ -31,6 +31,7 @@
         </template>
     </v-tooltip>
     <TweetDialog :tweetDialogVisible="tweetDialogIsOpen" @update:tweetDialogVisible="tweetDialogIsOpen = $event"></TweetDialog>
+    <FilterDialog :filterDialogVisible="filterDialogIsOpen" @update:filterDialogVisible="filterDialogIsOpen = $event" @update:filterMode="filterMode = $event"></FilterDialog>
     <div v-for="tweet in tweets" :key="tweet.id">
         <Tweet :authorID="tweet.authorId" :content="tweet.content" :tweetID="tweet.id" :createdAt="tweet.createdAt" :likeNumber="tweet.numberOfLikes" :isLoggedUserAdmin="isAdmin" :loggedUserID="id"></Tweet>
     </div>
@@ -42,12 +43,15 @@
     import { useStore } from 'vuex';
     import Tweet from "../components/Tweet.vue";
     import TweetDialog from "../components/Dialogs/TweetDialog.vue";
+    import FilterDialog from "../components/Dialogs/FilterDialog.vue";
 
     const id = ref('');
     const tweetDialogIsOpen = ref(false);
+    const filterDialogIsOpen = ref(false);
     const isAdmin = ref(false);
     const store = useStore();
     var tweets = ref([]);
+    var filterMode = ref('newest');
 
     function logout() {
         store.dispatch('auth/logout')
@@ -80,7 +84,11 @@
         tweetDialogIsOpen.value = true;
     }
 
-    async function getAllTweets() {
+    function openFilterDialog() {
+        filterDialogIsOpen.value = true;
+    }
+
+    async function getTweetsNewest() {
         try {
             const response = await fetch('https://localhost:7078/tweet/newest', {
                 method: 'GET',
@@ -96,15 +104,57 @@
         }
     }
 
+    async function getTweetsOldest() {
+        try {
+            const response = await fetch('https://localhost:7078/tweet/oldest', {
+                method: 'GET',
+                credentials: 'include'
+            });
+            if (!response.ok) {
+                throw new Error('Réponse réseau non réussie');
+            }
+            const data = await response.json();
+            tweets.value = data.tweets;
+        } catch (error) {
+            console.error("Erreur lors de la récupération des utilisateurs:", error);
+        }
+    }
+
+    async function getTweetsMostLiked() {
+        try {
+            const response = await fetch('https://localhost:7078/tweet/most-liked', {
+                method: 'GET',
+                credentials: 'include'
+            });
+            if (!response.ok) {
+                throw new Error('Réponse réseau non réussie');
+            }
+            const data = await response.json();
+            tweets.value = data.tweets;
+        } catch (error) {
+            console.error("Erreur lors de la récupération des utilisateurs:", error);
+        }
+    }
+
+    async function getAllTweets(filterMode) {
+        if (filterMode == "newest") {
+            await getTweetsNewest();
+        } else if (filterMode == "oldest") {
+            await getTweetsOldest();
+        } else if (filterMode == "mostLiked") {
+            await getTweetsMostLiked();
+        }
+    }
+
     onMounted(() => {
         getUserID();
-        getAllTweets();
+        getAllTweets(filterMode.value);
     });
 
     // retrieve tweets every 5 seconds
     setInterval(() => {
         getUserID();
-        getAllTweets();
+        getAllTweets(filterMode.value);
     }, 5000)
 </script>
 
