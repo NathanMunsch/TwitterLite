@@ -68,7 +68,29 @@ export default {
             }).catch(error => {
                 return 'Failed to create account';
             });
-        }
+        },
 
+        update({ commit }, updateData) {
+            return fetch('https://localhost:7078/user/update', {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updateData),
+            })
+            .then(async response => {
+                if (response.ok) {
+                    const data = await response.json().catch(() => ({ message: 'Account successfully updated.' }));
+                    return data.message || 'Account successfully updated.';
+                } else {
+                    const data = await response.json().catch(() => ({ errorMessage: 'Failed to update account' }));
+                    throw new Error(data.errorMessage || 'Failed to update account');
+                }
+            })
+            .catch(() => {
+                throw new Error('Failed to update account');
+            });
+        }
     },
 };

@@ -1,5 +1,5 @@
 <template>
-    <router-link to="/"><v-btn @click="" icon="mdi-arrow-left"></v-btn></router-link>
+    <router-link to="/"><v-btn icon="mdi-arrow-left"></v-btn></router-link>
     
     <div class="user">
         <v-container class="fill-height">
@@ -9,44 +9,111 @@
                         <v-img :src="`https://api.dicebear.com/8.x/pixel-art/svg?seed=${user.id}`"></v-img>
                     </v-avatar>
                     <h3 class="username">{{ user.username }}</h3>
-                    
-                    <v-textarea class="biographie" label="Ma bio :"></v-textarea>
                 </v-col>
             </v-row>
         </v-container>
     </div>
+    
+    <div class="biographie">
+        <v-container class="fill-height">
+            <v-row>
+                <v-col cols="4">
+                    <v-text-field 
+                    v-model="newUsername"
+                    type="input" 
+                    label="Username" 
+                    bg-color="#313B45" 
+                    color="primary"
+                    hint="Enter your new username"
+                    >
+                    </v-text-field>
+                </v-col>
+                <v-col cols="4" class="grey-background">
+                    <v-text-field
+                        v-model="newPassword"
+                        type="password"
+                        label="Password" 
+                        bg-color="#313B45" 
+                        color="primary"
+                        hide-details="auto"
+                        hint="Enter your new password"
+                    >
+                    </v-text-field>
+                </v-col>
+                <v-col cols="4">
+                    <v-btn variant="tonal" color="white" @click="openPasswordPrompt">
+                        Edit Profile
+                    </v-btn>
+                </v-col>
+            </v-row>
+        </v-container>
+        <h3 class="title">My tweets :</h3>
+    </div>
+
     <div v-for="tweet in tweets" :key="tweet.id">
         <Tweet :authorID="tweet.authorId" :content="tweet.content" :tweetID="tweet.id" :createdAt="tweet.createdAt" :likeNumber="tweet.numberOfLikes" :isLoggedUserAdmin="user.isAdmin" :loggedUserID="user.id"></Tweet>
     </div>
+
+    <PasswordPromptDialog
+        v-model="passwordPromptDialogVisible"
+        :userId="String(user.id)"
+        :username="user.username"
+        @close="passwordPromptDialogVisible = false"
+        @confirm="updateProfile"
+    />
 </template>
   
 <script setup>
-    import store from '../store';
-    import { computed, onMounted, ref, watch } from 'vue';
-    import Tweet from "../components/Tweet.vue";
-    import TweetDialog from "../components/Dialogs/TweetDialog.vue";
+import store from '../store';
+import { computed, onMounted, ref, watch } from 'vue';
+import Tweet from "../components/Tweet.vue";
+import PasswordPromptDialog from "../components/Dialogs/PasswordPromptDialog.vue";
 
-    const user = computed(() => store.state.user.user);
-    const tweets = computed(() => store.state.tweet.tweets);
+const user = computed(() => store.state.user.user);
+const tweets = computed(() => store.state.tweet.tweets);
 
-    onMounted(() => {
-        store.dispatch('user/getCurrentUser'); 
-    });
+const newUsername = ref('');
+const newPassword = ref('');
+const passwordPromptDialogVisible = ref(false);
 
-    watch(user, (newValue) => {
-        if (newValue && newValue.id) {
-            store.dispatch('tweet/getUserTweets', newValue.id);
-        }
-    }, { immediate: true });
+onMounted(() => {
+    store.dispatch('user/getCurrentUser'); 
+});
 
-    function logout() {
-        store.dispatch('auth/logout')
-        .then(() => {
-        })
-        .catch((error) => {
-            console.error('Logout failed:', error);
-        });
+watch(user, (newValue) => {
+    if (newValue && newValue.id) {
+        store.dispatch('tweet/getUserTweets', newValue.id);
     }
+}, { immediate: true });
+
+function openPasswordPrompt() {
+    passwordPromptDialogVisible.value = true;
+}
+
+async function updateProfile(oldPassword) {
+    const updateData = {
+        newUsername: newUsername.value || null,
+        newPassword: newPassword.value || null,
+        oldPassword: oldPassword
+    };
+
+    try {
+        const response = await store.dispatch('auth/update', updateData);
+        newUsername.value = '';
+        newPassword.value = '';
+    } catch (error) {
+        console.error(error);
+    }
+}
+    
+function logout() {
+    store.dispatch('auth/logout')
+    .then(() => {
+    })
+    .catch((error) => {
+        console.error('Logout failed:', error);
+    });
+}
 </script>
 
 <style scoped>
@@ -64,12 +131,19 @@
         border: 1px solid;
     }
     .title {
-        font-size: 20px;
-        margin: 5%;
+        font-size: 17px;
+        display: flex;
+        justify-content: left;
         color: white;
     }
     .biographie {
-        width: 30%;
-        background-color: rgb(21,32,43);
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+    }
+    .grey-background .v-input__control .v-field__input {
+        background-color: #757575; 
+        color: white;
     }
 </style>
