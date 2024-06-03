@@ -1,5 +1,6 @@
 <template>
-    <v-dialog v-model="dialogIsOpen" class="passwordDialog" persistent max-width="600px">
+    <v-dialog v-model="dialogIsOpen" class="passwordDialog" persistent>
+        
         <v-card style="background-color: rgb(21,32,43);">
             <v-text-field
                 v-model="password"
@@ -16,7 +17,7 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <FlashMessage v-if="showFlashMessageSuccess" content="Profile successfully modified."></FlashMessage>
+    <FlashMessage v-if="showFlashMessageSuccess" content="The username and/or password have been successfully changed."></FlashMessage>
     <FlashMessage v-if="showFlashMessageError" content="An error occurred."></FlashMessage>
 </template>
 
@@ -70,8 +71,7 @@ const confirmPassword = () => {
 
 <style scoped>
 .passwordDialog {
-    width: 100%;
-    max-width: 600px;
+    width: 600px;
 }
 .tweet-text-field /deep/ .v-counter {
     color: white !important;

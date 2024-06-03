@@ -82,10 +82,10 @@ export default {
             .then(async response => {
                 if (response.ok) {
                     const data = await response.json().catch(() => ({ message: 'Account successfully updated.' }));
-                    return 200;
+                    return data.message || 'Account successfully updated.';
                 } else {
                     const data = await response.json().catch(() => ({ errorMessage: 'Failed to update account' }));
-                    return 400;
+                    throw new Error(data.errorMessage || 'Failed to update account');
                 }
             })
             .catch(() => {
