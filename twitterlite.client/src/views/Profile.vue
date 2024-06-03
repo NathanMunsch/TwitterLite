@@ -16,19 +16,18 @@
     
     <div class="biographie">
         <v-container class="fill-height">
-            <v-row>
-                <v-col cols="4">
+            <v-row class="biographie-row">
+                <v-col cols="12" sm="4">
                     <v-text-field 
-                    v-model="newUsername"
-                    type="input" 
-                    label="Username" 
-                    bg-color="#313B45" 
-                    color="primary"
-                    hint="Enter your new username"
-                    >
-                    </v-text-field>
+                        v-model="newUsername"
+                        type="input" 
+                        label="Username" 
+                        bg-color="#313B45" 
+                        color="primary"
+                        hint="Enter your new username"
+                    ></v-text-field>
                 </v-col>
-                <v-col cols="4" class="grey-background">
+                <v-col cols="12" sm="4" class="grey-background">
                     <v-text-field
                         v-model="newPassword"
                         type="password"
@@ -37,10 +36,9 @@
                         color="primary"
                         hide-details="auto"
                         hint="Enter your new password"
-                    >
-                    </v-text-field>
+                    ></v-text-field>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="12" sm="4">
                     <v-btn variant="tonal" color="white" @click="openPasswordPrompt">
                         Edit Profile
                     </v-btn>
@@ -64,56 +62,47 @@
 </template>
   
 <script setup>
-import store from '../store';
-import { computed, onMounted, ref, watch } from 'vue';
-import Tweet from "../components/Tweet.vue";
-import PasswordPromptDialog from "../components/Dialogs/PasswordPromptDialog.vue";
+    import store from '../store';
+    import { computed, onMounted, ref, watch } from 'vue';
+    import Tweet from "../components/Tweet.vue";
+    import PasswordPromptDialog from "../components/Dialogs/PasswordPromptDialog.vue";
 
-const user = computed(() => store.state.user.user);
-const tweets = computed(() => store.state.tweet.tweets);
+    const user = computed(() => store.state.user.user);
+    const tweets = computed(() => store.state.tweet.tweets);
 
-const newUsername = ref('');
-const newPassword = ref('');
-const passwordPromptDialogVisible = ref(false);
+    const newUsername = ref('');
+    const newPassword = ref('');
+    const passwordPromptDialogVisible = ref(false);
 
-onMounted(() => {
-    store.dispatch('user/getCurrentUser'); 
-});
-
-watch(user, (newValue) => {
-    if (newValue && newValue.id) {
-        store.dispatch('tweet/getUserTweets', newValue.id);
-    }
-}, { immediate: true });
-
-function openPasswordPrompt() {
-    passwordPromptDialogVisible.value = true;
-}
-
-async function updateProfile(oldPassword) {
-    const updateData = {
-        newUsername: newUsername.value || null,
-        newPassword: newPassword.value || null,
-        oldPassword: oldPassword
-    };
-
-    try {
-        const response = await store.dispatch('auth/update', updateData);
-        newUsername.value = '';
-        newPassword.value = '';
-    } catch (error) {
-        console.error(error);
-    }
-}
-    
-function logout() {
-    store.dispatch('auth/logout')
-    .then(() => {
-    })
-    .catch((error) => {
-        console.error('Logout failed:', error);
+    onMounted(() => {
+        store.dispatch('user/getCurrentUser'); 
     });
-}
+
+    watch(user, (newValue) => {
+        if (newValue && newValue.id) {
+            store.dispatch('tweet/getUserTweets', newValue.id);
+        }
+    }, { immediate: true });
+
+    function openPasswordPrompt() {
+        passwordPromptDialogVisible.value = true;
+    }
+
+    async function updateProfile(oldPassword) {
+        const updateData = {
+            newUsername: newUsername.value || null,
+            newPassword: newPassword.value || null,
+            oldPassword: oldPassword
+        };
+
+        try {
+            const response = await store.dispatch('auth/update', updateData);
+            newUsername.value = '';
+            newPassword.value = '';
+        } catch (error) {
+            console.error(error);
+        }
+    }
 </script>
 
 <style scoped>
@@ -125,7 +114,7 @@ function logout() {
         font-weight: bold;
         color: white;
     }
-    .avatar{
+    .avatar {
         display: flex;
         justify-content: center;
         border: 1px solid;
@@ -135,6 +124,7 @@ function logout() {
         display: flex;
         justify-content: left;
         color: white;
+        margin-left: 18px;
     }
     .biographie {
         width: 40%;
@@ -142,8 +132,20 @@ function logout() {
         flex-direction: column;
         margin: auto;
     }
+    .biographie-row .v-col {
+        padding: 0 10px;
+    }
     .grey-background .v-input__control .v-field__input {
         background-color: #757575; 
         color: white;
+    }
+    @media screen and (max-width: 920px) {
+        .biographie {
+            width: 100%;
+        }
+        .biographie-row .v-col {
+            flex: 1;
+            padding: 0 5px;
+        }
     }
 </style>
