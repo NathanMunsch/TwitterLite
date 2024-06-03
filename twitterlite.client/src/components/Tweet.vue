@@ -6,7 +6,7 @@
             </v-avatar>
             <v-card-text class="Username">{{ username }}</v-card-text>
             <v-card-text class="TweetedAt">{{ formattedDate }}</v-card-text>
-            <v-menu :location="bottom" rounded>
+            <v-menu :location="bottom" rounded v-if="props.isLoggedUserAdmin || props.loggedUserID == props.authorID">
                 <template v-slot:activator="{ props }">
                     <v-icon v-bind="props" color="grey" style="margin-right: 10px;">mdi-dots-vertical</v-icon>
                 </template>
