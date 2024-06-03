@@ -159,7 +159,8 @@
         color: white;
     }
     .Tweet {
-        width: 40%;
+        width: 90%;
+        max-width: 600px;
         display: flex;
         flex-direction: column;
         margin: auto;
