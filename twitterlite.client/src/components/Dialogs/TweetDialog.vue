@@ -48,13 +48,13 @@
                 credentials: 'include'
             });
             if (!response.ok) {
-                throw new Error('Réponse réseau non réussie');
+                throw new Error('Rï¿½ponse rï¿½seau non rï¿½ussie');
             }
             const data = await response.json();
             id.value = data.user.id;
             username.value = data.user.username;
         } catch (error) {
-            console.error("Erreur lors de la récupération des utilisateurs:", error);
+            console.error("Erreur lors de la rï¿½cupï¿½ration des utilisateurs:", error);
         }
     }
 
@@ -88,7 +88,8 @@
 </script>
 <style scoped>
     .tweetDialog {
-        width: 600px;
+        width: 100%;
+        max-width: 600px;
     }
     .tweet-text-field /deep/ .v-counter {
         color: white !important;
