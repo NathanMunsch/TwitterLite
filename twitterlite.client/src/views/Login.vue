@@ -3,6 +3,9 @@
     import { useRouter } from 'vue-router';
     import { ref } from 'vue';
     import FlashMessage from '../components/FlashMessage.vue';
+    import { useStore } from 'vuex';
+
+    const store = useStore();
 
     const { handleSubmit } = useForm({
         validationSchema: {
@@ -51,21 +54,11 @@
 
     const submit = handleSubmit(values => {
         showFlashMessage.value = false;
-        fetch('https://localhost:7078/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({
-                'username': values.username,
-                'password': values.password
-            })
-        }).then(response => {
-            if (response.ok) {
-                router.push('/')
-            } else {
-                showFlashMessage.value = true;
-            }
-        });
+        store.dispatch('auth/login', { username: values.username, password: values.password }).then((response) => {
+            router.push('/');
+        }).catch(error => {
+            showFlashMessage.value = true;
+        });        
     })
 </script>
 

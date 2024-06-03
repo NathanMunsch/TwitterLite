@@ -1,5 +1,3 @@
-import { createStore } from 'vuex';
-
 export default {
   namespaced: true,
   state: {
@@ -20,7 +18,7 @@ export default {
   actions: {
     async getUsers({ commit }) {
       try {
-        const response = await fetch('https://localhost:7078/user/all', {
+        const response = await fetch('https://localhost:7078/admin/all-user', {
           method: 'GET',
           credentials: 'include',
         });
